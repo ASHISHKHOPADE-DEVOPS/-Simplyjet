@@ -1,15 +1,16 @@
-resource "aws_s3_bucket" "app_bucket" {
-  bucket = var.bucket_name
-  acl = "private"
+provider "aws" {
+  region = var.region
+}
+
+resource "aws_ebs_volume" "example" {
+  availability_zone = var.availability_zone
+  size              = var.size
   tags = {
-    Name = "AppBucket"
+    Name = "example-ebs-volume"
   }
 }
 
-resource "aws_ebs_volume" "app_volume" {
-  availability_zone = var.availability_zone
-  size = var.volume_size
-  tags = {
-    Name = "AppVolume"
-  }
+output "ebs_volume_id" {
+  value = aws_ebs_volume.example.id
 }
+
