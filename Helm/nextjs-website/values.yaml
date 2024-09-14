@@ -1,6 +1,6 @@
 replicaCount: 2
 image:
-  repository: your-docker-repo/nextjs-website
+  repository: your-docker-repo/reactjs-dashboard
   pullPolicy: Always
   tag: "latest"
 service:
@@ -10,8 +10,8 @@ ingress:
   enabled: true
   annotations: {}
   hosts:
-    - host: nextjs-website.yourdomain.com
-      paths: 
+    - host: reactjs-dashboard.yourdomain.com
+      paths:
         - path: "/"
   tls: []
 
