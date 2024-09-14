@@ -98,5 +98,5 @@ terraform destroy
 
 
 5. Conclusion
-This setup provides a scalable and flexible way to provision AWS infrastructure and deploy applications using Kubernetes. The Terraform and Helm combination ensures that you can manage both infrastructure and application deployment with minimal manual intervention.
+This setup provides a scalable and flexible way to provision AWS infrastructure and deploy applications using Kubernetes. The Terraform and Helm combination ensures that you can manage both infrastructure and application deployment with minimal manual intervention..
 
