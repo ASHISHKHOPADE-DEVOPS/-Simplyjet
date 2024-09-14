@@ -38,9 +38,9 @@ terraform apply
 
 This will create:
 
-VPC: Virtual Private Cloud for secure networking.
-EKS: Kubernetes cluster to host your workloads.
-Subnets: Public and private subnets within the VPC.
+1]VPC: Virtual Private Cloud for secure networking.
+2]EKS: Kubernetes cluster to host your workloads.
+3]Subnets: Public and private subnets within the VPC.
 
 
 Step 4: Configure kubectl to Access EKS
