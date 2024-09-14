@@ -1,0 +1,28 @@
+replicaCount: 3
+
+image:
+  repository: my-docker-repo/nextjs
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: LoadBalancer
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+  hosts:
+    - host: "nextjs-prod.example.com"
+      paths:
+        - /
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
