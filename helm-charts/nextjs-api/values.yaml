@@ -1,0 +1,16 @@
+replicaCount: 2
+image:
+  repository: your-docker-repo/nextjs-api
+  pullPolicy: Always
+  tag: "latest"
+service:
+  type: ClusterIP
+  port: 3000
+ingress:
+  enabled: true
+  annotations: {}
+  hosts:
+    - host: nextjs-api.yourdomain.com
+      paths:
+        - path: "/"
+  tls: []
