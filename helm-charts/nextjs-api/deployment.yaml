@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: nextjs-api
+  template:
+    metadata:
+      labels:
+        app: nextjs-api
+    spec:
+      containers:
+        - name: nextjs-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-api
+spec:
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 3000
+  selector:
+    app: nextjs-api
