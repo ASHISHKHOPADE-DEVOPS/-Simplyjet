@@ -1,19 +1,5 @@
-Project Structure:
+![image](https://github.com/user-attachments/assets/bc147b24-81f3-44cf-a0b8-497ccdd22a6a)
 
-├── terraform
-│   ├── modules
-│   │   ├── vpc
-│   │   ├── eks
-│   │   ├── storage
-│   │   └── security
-│   ├── environments
-│   │   ├── production
-│   │   │    └── main.tf
-│   │   ├── staging
-│   │   │    └── main.tf
-│   ├── versions.tf
-│   ├── variables.tf
-│   └── backend.tf
 
 Description:
 This project uses Terraform to provision AWS infrastructure components required for production and staging environments. Each environment includes modules for creating a Virtual Private Cloud (VPC), an Amazon Elastic Kubernetes Service (EKS) cluster, AWS storage solutions (EBS & S3), and security configurations (IAM roles, security groups).
