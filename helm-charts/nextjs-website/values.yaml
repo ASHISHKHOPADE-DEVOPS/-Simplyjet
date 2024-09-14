@@ -1,0 +1,16 @@
+replicaCount: 2
+image:
+  repository: your-docker-repo/nextjs-website
+  pullPolicy: Always
+  tag: "latest"
+service:
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  annotations: {}
+  hosts:
+    - host: nextjs-website.yourdomain.com
+      paths: 
+        - path: "/"
+  tls: []
