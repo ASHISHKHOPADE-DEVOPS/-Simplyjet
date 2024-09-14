@@ -1,111 +1,101 @@
-![image](https://github.com/user-attachments/assets/716c6134-af9d-4c3a-9b7a-21b341126af9)
+AWS Infrastructure and Kubernetes Deployment
+
+Overview
+This project automates the deployment of an AWS infrastructure using Terraform and Kubernetes workloads using Helm. It provisions the necessary cloud resources like VPC, EKS cluster, and networking, while deploying applications such as Next.js, React Dashboard, PostgreSQL, and Redis onto the EKS cluster.
+
+Prerequisites
+Before you begin, ensure the following tools are installed:
+
+1]Terraform: Install Terraform
+2]AWS CLI: Install AWS CLI and configure it using aws configure
+3]kubectl: Install kubectl
+4]Helm: Install Helm
+Ensure you have the necessary permissions for provisioning AWS resources (IAM user/role) and access to an AWS account.
+
+Project Structure
+
+![image](https://github.com/user-attachments/assets/b82637b7-4cba-43ad-9e41-557b243d2259)
 
 
 
-Description:
-This project uses Terraform to provision AWS infrastructure components required for production and staging environments. Each environment includes modules for creating a Virtual Private Cloud (VPC), an Amazon Elastic Kubernetes Service (EKS) cluster, AWS storage solutions (EBS & S3), and security configurations (IAM roles, security groups).
 
+1. Terraform Setup
+Step 1: Initialize Terraform
+Navigate to the appropriate environment directory (production or staging):
 
-Modules:
-1. VPC Module (modules/vpc)
-Creates a VPC with public and private subnets.
-Configures Internet Gateways, NAT Gateways, Route Tables, and associations for proper traffic routing.
-
-2. EKS Module (modules/eks)
-Provisions an EKS cluster with managed node groups for Kubernetes workloads.
-Enables multi-AZ deployment and Kubernetes Cluster Autoscaler.
-
-4. Storage Module (modules/storage)
-Sets up EBS volumes for persistent storage.
-Creates S3 buckets for object storage.
-
-6. Security Module (modules/security)
-Configures AWS security groups, IAM roles, and policies.
-Implements best practices such as least privilege and secure access control.
-
-Folder Breakdown:
-
-terraform/environments/production/main.tf
-This file provisions the infrastructure for the production environment by calling each module.
-Adjust environment-specific variables in the variables.tf file.
-
-terraform/environments/staging/main.tf
-This file provisions the infrastructure for the staging environment.
-It has a similar structure to production but may contain environment-specific values like smaller cluster sizes.
-
-terraform/versions.tf
-Defines the minimum required Terraform and provider versions to ensure compatibility.
-
-terraform/variables.tf
-Contains variables shared across the environments, such as region, VPC CIDR blocks, cluster name, etc.
-Adjust values here for different environments (e.g., staging vs production).
-
-terraform/backend.tf
-Configures remote state storage in an S3 bucket to store Terraform's state file.
-The backend uses DynamoDB for state locking to prevent concurrent changes.
-
-Setup Instructions:
-Step 1: Install Prerequisites
-Ensure you have the following installed on your machine:
-
-1]Terraform
-2]AWS CLI
-3]kubectl
-You can install them using:
-
-
-# Terraform installation
-brew install terraform
-
-# AWS CLI installation
-brew install awscli
-
-# kubectl installation
-brew install kubectl
-Step 2: Set up AWS Credentials
-Make sure your AWS credentials are configured in your environment by running:
-
-
-aws configure
-Provide your AWS Access Key, Secret Key, Region, and Output Format.
-
-Step 3: Initialize Terraform
-Navigate to the root of your project (terraform/environments/production or terraform/environments/staging), then run:
-
-
+cd terraform/environments/production
+Initialize the Terraform workspace to install the required provider plugins:
 terraform init
-This will initialize Terraform and download necessary provider plugins and modules.
 
-Step 4: Plan and Apply Changes
-To preview the infrastructure changes, run:
+Step 2: Review Terraform Plan
+To ensure everything is set up correctly, review the execution plan:
+terraform plan
 
-#terraform plan
-To apply the changes to your AWS environment, run:
-
-
-#terraform apply
-You will be prompted to confirm the changes by typing yes.
-
-Step 5: Verify the Deployment
-After the deployment, you can verify your resources in the AWS console:
-
-1]Check the VPC, subnets, and route tables under VPC.
-2]Look for the EKS cluster under EKS.
-3]Verify the S3 buckets and EBS volumes in S3 and EC2 sections.
-4]Ensure that your security groups and IAM roles are set up correctly.
-
-Step 6: Destroy Infrastructure
-When you're done and want to remove all resources, run:
+Step 3: Apply Terraform Configuration
+Once you confirm the changes, you can apply the Terraform configuration to provision your resources:
+terraform apply
 
 
+This will create:
+
+VPC: Virtual Private Cloud for secure networking.
+EKS: Kubernetes cluster to host your workloads.
+Subnets: Public and private subnets within the VPC.
+
+
+Step 4: Configure kubectl to Access EKS
+After Terraform completes, configure kubectl to manage your EKS cluster:
+aws eks --region <region> update-kubeconfig --name <cluster_name>
+This command ensures your local kubectl is configured to interact with the newly created EKS cluster.
+
+2. Helm Setup
+Step 1: Verify Kubernetes Cluster
+Check if the EKS cluster is accessible by running:
+kubectl get nodes
+You should see a list of worker nodes provisioned by Terraform.
+
+Step 2: Deploy Helm Charts
+1]Next.js Website: Deploy the Next.js website using its Helm chart.
+helm install nextjs-website helm/charts/nextjs-website
+
+2]React Dashboard: Deploy the React-based dashboard.
+helm install react-dashboard helm/charts/react-dashboard
+
+3]Next.js API: Deploy the Next.js API service.
+helm install nextjs-api helm/charts/nextjs-api
+
+4]PostgreSQL Database: Deploy PostgreSQL database.
+helm install postgresql helm/charts/postgresql
+
+5]Redis: Deploy Redis for caching.
+helm install redis helm/charts/redis
+
+Step 3: Verify Deployments
+After each Helm install, verify that the pods are running:
+kubectl get pods
+You should see the pods for each deployed service.
+
+Step 4: Access Services
+Services can be accessed via the LoadBalancer or Ingress configuration, depending on your Helm chart values. You can retrieve the service information using:
+kubectl get services
+This will provide the public IP or DNS of the LoadBalancer where you can access your application.
+
+3. Customizing Helm and Terraform
+Customizing Terraform
+1]Each module (VPC, EKS) has customizable variables. Modify the variables by editing the variables.tf files in terraform/modules/vpc or terraform/modules/eks.
+2]Set environment-specific variables in terraform.tfvars located in each environment folder (production or staging).
+
+
+Customizing Helm
+Each Helm chart has a values.yaml file that can be modified to customize resources like replica counts, image versions, environment variables, etc.
+To upgrade or redeploy with updated values, use:
+helm upgrade <release_name> helm/charts/<chart_name> -f helm/charts/<chart_name>/values.yaml
+
+4. Destroying Resources
+If you need to clean up and destroy all the provisioned infrastructure, you can do so by running:
 terraform destroy
-This will tear down the entire infrastructure.
 
-Important Notes:
-1]State Management: The backend.tf file ensures that Terraform uses remote state storage on S3, preventing state loss and allowing multiple team members to collaborate.
 
-2]Variable Customization: You can adjust environment-specific values by modifying the variables.tf file.
-
-3]Security: Make sure to follow best practices for AWS IAM and use the least privilege principle for permissions.
-
+5. Conclusion
+This setup provides a scalable and flexible way to provision AWS infrastructure and deploy applications using Kubernetes. The Terraform and Helm combination ensures that you can manage both infrastructure and application deployment with minimal manual intervention.
 
