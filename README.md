@@ -92,11 +92,11 @@ This will initialize Terraform and download necessary provider plugins and modul
 Step 4: Plan and Apply Changes
 To preview the infrastructure changes, run:
 
-terraform plan
+#terraform plan
 To apply the changes to your AWS environment, run:
 
 
-terraform apply
+#terraform apply
 You will be prompted to confirm the changes by typing yes.
 
 Step 5: Verify the Deployment
@@ -115,8 +115,10 @@ terraform destroy
 This will tear down the entire infrastructure.
 
 Important Notes:
-State Management: The backend.tf file ensures that Terraform uses remote state storage on S3, preventing state loss and allowing multiple team members to collaborate.
-Variable Customization: You can adjust environment-specific values by modifying the variables.tf file.
-Security: Make sure to follow best practices for AWS IAM and use the least privilege principle for permissions.
+1]State Management: The backend.tf file ensures that Terraform uses remote state storage on S3, preventing state loss and allowing multiple team members to collaborate.
+
+2]Variable Customization: You can adjust environment-specific values by modifying the variables.tf file.
+
+3]Security: Make sure to follow best practices for AWS IAM and use the least privilege principle for permissions.
 
 
