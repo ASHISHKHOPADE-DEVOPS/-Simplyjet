@@ -20,6 +20,7 @@ Project Structure
 
 
 1. Terraform Setup
+
 Step 1: Initialize Terraform
 Navigate to the appropriate environment directory (production or staging):
 
