@@ -1,15 +1,27 @@
-module "eks" {
-  source = "terraform-aws-modules/eks/aws"
-  cluster_name = var.cluster_name
-  cluster_version = "1.21"
-  subnets = concat(aws_subnet.public[*].id, aws_subnet.private[*].id)
-  vpc_id = aws_vpc.main.id
-  node_groups = {
-    worker_group = {
-      desired_capacity = 2
-      max_capacity = 5
-      min_capacity = 1
-      instance_type = "t3.medium"
-    }
+provider "aws" {
+  region = "us-west-2"
+}
+
+resource "aws_eks_cluster" "main" {
+  name     = "my-cluster"
+  role_arn  = aws_iam_role.eks.arn
+  version   = "1.21"
+
+  vpc_config {
+    subnet_ids = aws_subnet.public[*].id
   }
 }
+
+# Node group configuration
+resource "aws_eks_node_group" "main" {
+  cluster_name    = aws_eks_cluster.main.name
+  node_role_arn   = aws_iam_role.node.arn
+  subnet_ids       = aws_subnet.public[*].id
+  scaling_config {
+    desired_size = 2
+    max_size     = 5
+    min_size     = 1
+  }
+}
+
+# IAM roles and other configurations
