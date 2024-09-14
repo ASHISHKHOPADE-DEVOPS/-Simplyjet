@@ -89,7 +89,9 @@ Customizing Terraform
 
 Customizing Helm
 Each Helm chart has a values.yaml file that can be modified to customize resources like replica counts, image versions, environment variables, etc.
-To upgrade or redeploy with updated values, use:
+To upgrade or redeploy with updated values,
+
+use:
 helm upgrade <release_name> helm/charts/<chart_name> -f helm/charts/<chart_name>/values.yaml
 
 4. Destroying Resources
